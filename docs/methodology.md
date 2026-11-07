@@ -17,6 +17,10 @@ The intended interval sequence is:
 
 The precise placement of inventory updates and executions within this sequence must be confirmed before implementing accounting equations. Simulation scenarios should be reusable across policies so comparisons use common order-flow realizations wherever possible.
 
+### Initial simulation data and matching interface
+
+The simulation foundation uses typed `Order`, `MatchedQuantity`, `SimulationConfig`, and `DayScenario` structures in `src/simulation/models.py`. Order quantity is a positive magnitude; `Order.signed_quantity` is positive for buys and negative for sells. `match_orders` is a policy-independent function that matches opposing orders within each interval in stable input-order FIFO sequence, returning pairwise allocations and residual orders. This initial implementation does not assign an internal execution price or match orders across intervals. Those choices remain open as documented in `docs/assumptions.md`.
+
 ## Baseline strategies
 
 - **No matching / direct routing:** Each pod routes orders directly to the exchange, representing the absence of a central netting desk.

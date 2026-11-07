@@ -27,6 +27,7 @@ This document separates facts and requirements supplied by the project materials
 
 - Exact pod count and mix; order sizes, signs, arrival processes, correlation, and intraday patterns.
 - The order data schema, matching allocation priority, and internal fair-price convention.
+- Whether share quantities must be integer-valued or may be fractional, whether one pod may submit opposite-side orders in one interval, and whether explicit order IDs are needed for repeated orders.
 - The exact event sequence for arrivals, internal matching, inventory updates, and exchange execution.
 - Which future orders or expected fast-trader reversals the desk can forecast, and how forecasts are represented.
 - Functional forms and calibrated values for fees, immediate impact, impact persistence, inventory risk, and adverse selection.
@@ -36,6 +37,17 @@ This document separates facts and requirements supplied by the project materials
 - The mathematical definition of non-speculative trading and feasibility near the end of day.
 - Optimization solver and reliability/runtime targets for the five-minute cycle.
 - Monte Carlo replication count, sensitivity ranges, random-seed policy, and reporting intervals.
+
+## Simulation data and matching conventions (provisional)
+
+- `Order` represents one pod's request in one interval. It stores `pod_id`, zero-based `interval`, `side` (`BUY` or `SELL`), and a positive finite `quantity` magnitude.
+- Signed order quantity is positive for a buy and negative for a sell. The unsigned `quantity` remains positive for both sides; use `Order.signed_quantity` when aggregating net flow.
+- `SimulationConfig` stores the interval count, the five-minute interval duration, and an optional random seed. No number of intervals or stochastic order parameters is prescribed by this data structure.
+- `DayScenario` stores a complete day's orders grouped by interval so later policies can reuse the same realized scenario.
+- `match_orders` matches only orders from the same interval. Within each interval, it uses FIFO priority based on the caller-provided sequence, separately for buys and sells. This simple deterministic rule makes matching reproducible; a pro-rata or other allocation rule can replace it later.
+- A match records the source buy order, source sell order, and positive matched quantity. Any unmatched remainder is returned as a new order retaining the source pod, interval, and side. The matching function does not set a price, mutate orders, or depend on a trading strategy.
+
+These matching choices are provisional implementation conventions, not calibrated market assumptions. The internal fair-price convention, whether and how older desk inventory is paired with later orders, and the final allocation priority remain open. The initial matcher is scoped to contemporaneous (same-interval) order matching.
 
 ## Documentation rule
 

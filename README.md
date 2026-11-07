@@ -2,7 +2,7 @@
 
 A preliminary Python project for studying how a central desk can internally match opposing orders from independent trading pods, manage the resulting inventory, and schedule residual exchange trades over a trading day. The project is part of the INDE 590 MIE Capstone Experience at Rice University (Fall 2026).
 
-> **Model status:** This repository is a project scaffold. The mathematical formulation, timing conventions, parameter values, and impact-memory treatment are preliminary and will be refined during the project. The modules do not yet implement a simulation or optimization model.
+> **Model status:** This repository is an early project implementation. It now includes typed order/scenario structures and interval-local internal matching. Order generation, inventory accounting, the full trading-day simulation, and optimization are not implemented yet. The mathematical formulation, timing conventions, parameter values, and impact-memory treatment remain preliminary.
 
 ## Problem background
 
@@ -42,7 +42,7 @@ Market-impact memory represents the continuing effect of the desk's **own previo
 
 ## Repository structure
 
-- `src/simulation/`: order generation, internal matching, inventory accounting, and trading-day workflow.
+- `src/simulation/`: shared typed order/scenario structures plus order generation, internal matching, inventory accounting, and trading-day workflow.
 - `src/optimization/`: cost components, constraints, MPC, and market-impact alternatives.
 - `src/strategies/`: direct routing, simultaneous matching, and heuristic baselines.
 - `experiments/`: baseline comparisons and sensitivity analyses.
