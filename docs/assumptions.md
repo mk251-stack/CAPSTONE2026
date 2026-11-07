@@ -40,14 +40,15 @@ This document separates facts and requirements supplied by the project materials
 
 ## Simulation data and matching conventions (provisional)
 
-- `Order` represents one pod's request in one interval. It stores `pod_id`, zero-based `interval`, `side` (`BUY` or `SELL`), and a positive finite `quantity` magnitude.
-- Signed order quantity is positive for a buy and negative for a sell. The unsigned `quantity` remains positive for both sides; use `Order.signed_quantity` when aggregating net flow.
-- `SimulationConfig` stores the interval count, the five-minute interval duration, and an optional random seed. No number of intervals or stochastic order parameters is prescribed by this data structure.
-- `DayScenario` stores a complete day's orders grouped by interval so later policies can reuse the same realized scenario.
-- `match_orders` matches only orders from the same interval. Within each interval, it uses FIFO priority based on the caller-provided sequence, separately for buys and sells. This simple deterministic rule makes matching reproducible; a pro-rata or other allocation rule can replace it later.
-- A match records the source buy order, source sell order, and positive matched quantity. Any unmatched remainder is returned as a new order retaining the source pod, interval, and side. The matching function does not set a price, mutate orders, or depend on a trading strategy.
+- `Order` stores a unique `order_id`, `pod_id`, zero-based interval, `OrderSide`, and positive `Decimal` quantity.
+- Quantities are share magnitudes and use base-10 `Decimal` arithmetic. Integer inputs are normalized to `Decimal`; floating-point inputs are rejected to prevent binary approximation from entering accounting. This supports fractional quantities exactly. Whether the model should ultimately use whole shares, fractional shares, or a specified share increment remains open.
+- Signed order flow is positive for a pod buy and negative for a pod sell. This is a convention for aggregating pod orders; it does not yet establish the central desk's inventory sign convention.
+- `SimulationConfig` stores interval count, five-minute interval duration, and an optional random seed. It does not select a day length or stochastic order parameters.
+- `DayScenario` stores a complete day's orders by interval. It defensively converts outer and inner collections to tuples, requires at least one interval, validates order types and interval positions, and requires order IDs to be unique within the scenario.
+- `match_orders` validates typed inputs and unique IDs, then matches only orders from the same interval. Within each interval, it uses FIFO priority based on caller-provided sequence, separately for buys and sells. Pairwise matches and residuals retain source order IDs. Matching converts all inputs to integer units at their finest shared decimal scale, so allocation and residual arithmetic are exact and do not depend on Decimal context precision or a rounding tolerance.
+- Matching assigns no internal price, does not mutate input orders, and is independent of trading or optimization strategy.
 
-These matching choices are provisional implementation conventions, not calibrated market assumptions. The internal fair-price convention, whether and how older desk inventory is paired with later orders, and the final allocation priority remain open. The initial matcher is scoped to contemporaneous (same-interval) order matching.
+FIFO is retained as a simple deterministic provisional allocation rule. It can be replaced if the project selects another priority rule. Whether a pod may submit opposing orders in one interval, whether older desk inventory should offset later orders, the internal fair-price convention, and final share granularity remain open.
 
 ## Documentation rule
 

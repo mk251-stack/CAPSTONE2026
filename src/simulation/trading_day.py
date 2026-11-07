@@ -1,14 +1,15 @@
-"""Coordinate a single simulated trading day across intervals and policies."""
+"""Interface for coordinating a typed scenario across a trading day."""
 
-from collections.abc import Mapping
-from typing import Any
+from typing import NoReturn
+
+from .models import DayScenario, SimulationConfig
 
 
 def simulate_trading_day(
-    *, scenario: Mapping[str, Any], strategy: Any, config: Mapping[str, Any]
-) -> Mapping[str, Any]:
-    """Run one day and return its recorded state and performance summary.
+    *, scenario: DayScenario, strategy: object, config: SimulationConfig
+) -> NoReturn:
+    """Run one day from a validated scenario using a future strategy interface.
 
-    TODO: Define scenario, strategy, configuration, and result schemas.
+    TODO: Define strategy and result contracts before implementing orchestration.
     """
     raise NotImplementedError("The trading-day simulation is not implemented.")
