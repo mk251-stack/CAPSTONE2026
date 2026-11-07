@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "capstone2026"
+version = "0.1.0"
+description = "Research scaffold for internal netting and inventory scheduling across trading pods"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy",
+    "pandas",
+    "scipy",
+    "cvxpy",
+    "matplotlib",
+    "seaborn",
+    "pytest",
+    "jupyter",
+]
+
+[tool.setuptools]
+packages = [
+    "src",
+    "src.simulation",
+    "src.optimization",
+    "src.strategies",
+]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra"

@@ -1,0 +1,41 @@
+# Python environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Temporary and log files
+*.tmp
+*.temp
+*.log
+~$*
+
+# Build and packaging output
+build/
+dist/
+*.egg-info/
+
+# Generated experiment output (keep directories via .gitkeep)
+results/figures/*
+!results/figures/.gitkeep
+results/tables/*
+!results/tables/.gitkeep
