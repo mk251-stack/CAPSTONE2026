@@ -19,7 +19,9 @@ The precise placement of inventory updates and executions within this sequence m
 
 ### Initial simulation data and matching interface
 
-The simulation foundation uses typed `Order`, `MatchedQuantity`, `SimulationConfig`, and `DayScenario` structures in `src/simulation/models.py`. Order quantity is a positive magnitude; `Order.signed_quantity` is positive for buys and negative for sells. `match_orders` is a policy-independent function that matches opposing orders within each interval in stable input-order FIFO sequence, returning pairwise allocations and residual orders. This initial implementation does not assign an internal execution price or match orders across intervals. Those choices remain open as documented in `docs/assumptions.md`.
+The simulation foundation uses typed `Order`, `MatchedQuantity`, `SimulationConfig`, and `DayScenario` structures in `src/simulation/models.py`. Orders have unique IDs and positive `Decimal` share magnitudes; signed order flow is positive for buys and negative for sells. Integer quantities are normalized to `Decimal`, while floats are rejected to avoid binary rounding. `DayScenario` defensively freezes its nested order collections and validates interval placement and ID uniqueness.
+
+`match_orders` is a policy-independent FIFO function that matches only orders in the same interval. It returns pairwise matched quantities and residual `Order` objects, preserving IDs and metadata. Matching converts quantities to integer units at their finest shared decimal scale, so allocations and residuals are exact and independent of Decimal context precision; no tolerance-based rounding is applied. FIFO remains a provisional, deterministic allocation rule; pricing and cross-interval inventory matching are not implemented.
 
 ## Baseline strategies
 

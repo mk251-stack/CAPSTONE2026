@@ -1,16 +1,17 @@
-"""Generate pod orders for simulated trading intervals.
+"""Generate typed pod orders for simulated trading intervals.
 
 Order distributions, pod composition, and within-day timing remain to be specified.
 """
 
-from collections.abc import Mapping
-from typing import Any
+from random import Random
+
+from .models import Order, SimulationConfig
 
 
 def generate_orders(
-    *, interval_index: int, config: Mapping[str, Any], rng: Any | None = None
-) -> list[dict[str, Any]]:
-    """Return orders submitted in one interval under a future order-flow model.
+    *, interval_index: int, config: SimulationConfig, rng: Random | None = None
+) -> list[Order]:
+    """Return typed orders submitted in one interval under a future order-flow model.
 
     TODO: Define the order schema and generation assumptions before implementation.
     """
